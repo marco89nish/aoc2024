@@ -1,21 +1,22 @@
+import kotlin.math.absoluteValue
+
 fun main() {
-    fun part1(input: List<String>): Int {
-        return input.size
+    fun part1(list1: List<Int>, list2: List<Int>): Int {
+        return (list1.sorted() zip list2.sorted())
+                .sumOf { (first, second) -> (first - second).absoluteValue }
     }
 
-    fun part2(input: List<String>): Int {
-        return input.size
+    fun part2(list1: List<Int>, list2: List<Int>): Int {
+        val counts = list2.groupingBy { it }.eachCount()
+        return list1.sumOf { el -> el * (counts[el] ?: 0) }
     }
-
-    // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("test_input")) == 1)
-
-    // Or read a large test input from the `src/Day01_test.txt` file:
-    val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day01")
-    part1(input).println()
-    part2(input).println()
+    val pairs = input.map(::parseLine)
+    val (list1, list2) = pairs.unzip()
+    part1(list1, list2).println()
+    part2(list1, list2).println()
 }
+
+private fun parseLine(line: String) = line.split("   ").map { it.toInt() }.let { it[0] to it[1] }
